@@ -16,37 +16,7 @@ public class ObjectColor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Assigns all objects tagged to their respective color
-        clayCubes = GameObject.FindGameObjectsWithTag("clay");
-        woodCubes = GameObject.FindGameObjectsWithTag("wood");
-        brickCubes = GameObject.FindGameObjectsWithTag("brick");
-
-        foreach (GameObject cube in clayCubes)
-        {
-            var cubeRenderer = cube.GetComponent<Renderer>();
-            cubeRenderer.material.SetColor("_Color", clayColor);
-        }
-
-        foreach (GameObject cube in woodCubes)
-        {
-            var cubeRenderer = cube.GetComponent<Renderer>();
-            cubeRenderer.material.SetColor("_Color", woodColor);
-        }
-
-        foreach (GameObject cube in brickCubes)
-        {
-            var cubeRenderer = cube.GetComponent<Renderer>();
-            cubeRenderer.material.SetColor("_Color", brickColor);
-        }
-
-        /*
-        foreach (GameObject cube in clayCubes)
-        {
-            var cubeRenderer = cube.GetComponent<Renderer>();
-            cubeRenderer.material.SetColor("_Color", clayColor);
-        }
-        */
-
+        
 
     }
 }
