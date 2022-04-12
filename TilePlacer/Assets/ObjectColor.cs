@@ -16,7 +16,14 @@ public class ObjectColor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //troll
+        //Get all the gameobjects of the cubes
+
+    }
+
+    void Update()
+    {
+        //Constantly check if the colors for each cube are different than the scneceColos array
+        //If different, then level = won. Otherwise, continue building
 
     }
 }

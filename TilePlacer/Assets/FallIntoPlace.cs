@@ -28,10 +28,13 @@ public class FallIntoPlace : MonoBehaviour
 
     public AnimationCurve animCurve;
 
+    public Color[] sceneColors;
+
+    private int blockDif = 0;
+
     void Start()
     {
         Blocks = GetComponentsInChildren<Transform>();
-        Debug.Log(Blocks);
         BlockHeights = new float[Blocks.Length];
         //iterate through every block and log starting Y position to the BlockHeights array
         for (int i = 1; i < Blocks.Length; i++)
@@ -48,6 +51,24 @@ public class FallIntoPlace : MonoBehaviour
             MoveBlock();
         }
 
+        if(blockDif < Blocks.Length)
+        {
+            for (int i = 1; i < Blocks.Length; i++)
+            {
+                Debug.Log(blockDif);
+                for (int c = 0; c < sceneColors.Length; c++)
+                {
+                    if (Blocks[i].GetComponent<MeshRenderer>().material.color != sceneColors[c])
+                    {
+                        blockDif += 1;
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Color Finished");
+        }
     }
 
 
@@ -63,6 +84,7 @@ public class FallIntoPlace : MonoBehaviour
         }
         else
         {
+            //if all blocks placed down, do popup-for color (or somethign)
             RandomSoundness();
             Blocks[t].transform.position = new Vector3(Blocks[t].transform.position.x, BlockHeights[t] - fallAmount, Blocks[t].transform.position.z);
             t = t + 1;
