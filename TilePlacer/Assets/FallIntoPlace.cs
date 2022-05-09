@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FallIntoPlace : MonoBehaviour
 {
@@ -18,17 +19,15 @@ public class FallIntoPlace : MonoBehaviour
 
     private float elapsedTime = 0;
 
-    private bool completed = false;
-
-    public int fallAmount = 30;
+    public int fallAmount = 10;
 
     private int t = 1;
 
     public float objectSpeed;
 
-    public AnimationCurve animCurve;
+    public Slider speedSlider;
 
-    public Color[] sceneColors;
+    public AnimationCurve animCurve;
 
     private int blockDif = 0;
 
@@ -40,55 +39,49 @@ public class FallIntoPlace : MonoBehaviour
         for (int i = 1; i < Blocks.Length; i++)
         {
             BlockHeights[i] = Blocks[i].transform.position.y;
+            Blocks[i].gameObject.SetActive(false);
         }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        objectSpeed = speedSlider.value;
+
         if (Input.GetMouseButton(0) && Input.mousePosition.y > 400)
         {
-            MoveBlock();
+            MoveBlock(Blocks);
         }
 
-        if(blockDif < Blocks.Length)
-        {
-            for (int i = 1; i < Blocks.Length; i++)
-            {
-                Debug.Log(blockDif);
-                for (int c = 0; c < sceneColors.Length; c++)
-                {
-                    if (Blocks[i].GetComponent<MeshRenderer>().material.color != sceneColors[c])
-                    {
-                        blockDif += 1;
-                    }
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Color Finished");
-        }
     }
 
 
-    void MoveBlock()
+    void MoveBlock(Transform[] Blocks)
     {
-        Transform[] Blocks = GetComponentsInChildren<Transform>();
+        //Transform[] Blocks = GetComponentsInChildren<Transform>();
+
+        float currentPosY = Blocks[t].transform.position.y;
 
         if (Blocks[t].transform.position.y > BlockHeights[t] - fallAmount)
         {
-            elapsedTime += Time.deltaTime;
-            Blocks[t].transform.position = Vector3.Lerp(Blocks[t].transform.position, Blocks[t].transform.position - new Vector3(0, fallAmount, 0),  animCurve.Evaluate(elapsedTime/objectSpeed));
+            Blocks[t].gameObject.SetActive(true);
             
+            Blocks[t].Translate(Vector3.back* objectSpeed * Time.deltaTime);
+            currentPosY = Blocks[t].transform.position.y;
         }
         else
         {
-            //if all blocks placed down, do popup-for color (or somethign)
-            RandomSoundness();
             Blocks[t].transform.position = new Vector3(Blocks[t].transform.position.x, BlockHeights[t] - fallAmount, Blocks[t].transform.position.z);
-            t = t + 1;
-            elapsedTime = 0;
+            if (t < Blocks.Length - 1)
+            {
+                
+                //If block down then play random sound and set elapsed time back to 0
+                RandomSoundness();
+                t = t + 1;
+                elapsedTime = 0;
+
+            }
         }
     }
 

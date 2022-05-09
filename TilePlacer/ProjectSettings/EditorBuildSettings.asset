@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Unicorn.unity
+    guid: f1657bb76735e68479feea3237c83964
+  - enabled: 1
+    path: Assets/Scenes/Fairy.unity
+    guid: e2c571cc204d9c34591b06ee092cc526
+  - enabled: 1
+    path: Assets/Scenes/Phoenix.unity
+    guid: 7c62cdf79a7d48045b5a71f6239cc268
   m_configObjects: {}
