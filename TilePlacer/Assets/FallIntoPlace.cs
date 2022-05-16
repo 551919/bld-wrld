@@ -11,7 +11,9 @@ public class FallIntoPlace : MonoBehaviour
 
     public Transform[] Blocks;
 
-    public float[] BlockHeights;
+    List<GameObject> BlockFall = new List<GameObject>();
+
+    public float BlockFallLength;
 
     private float desiredDuration = 100;
 
@@ -34,11 +36,10 @@ public class FallIntoPlace : MonoBehaviour
     void Start()
     {
         Blocks = GetComponentsInChildren<Transform>();
-        BlockHeights = new float[Blocks.Length];
+
         //iterate through every block and log starting Y position to the BlockHeights array
         for (int i = 1; i < Blocks.Length; i++)
         {
-            BlockHeights[i] = Blocks[i].transform.position.y;
             Blocks[i].gameObject.SetActive(false);
         }
         
@@ -53,41 +54,54 @@ public class FallIntoPlace : MonoBehaviour
         {
             MoveBlock(Blocks);
         }
+        else
+        {
+            moveBlocksBack();
+        }
 
     }
 
 
     void MoveBlock(Transform[] Blocks)
     {
-        //Transform[] Blocks = GetComponentsInChildren<Transform>();
-
-        float currentPosY = Blocks[t].transform.position.y;
-
-        if (Blocks[t].transform.position.y > BlockHeights[t] - fallAmount)
+        for (int t = 0; t < Blocks.Length; t++)
         {
-            Blocks[t].gameObject.SetActive(true);
-            
-            Blocks[t].Translate(Vector3.back* objectSpeed * Time.deltaTime);
-            currentPosY = Blocks[t].transform.position.y;
-        }
-        else
-        {
-            Blocks[t].transform.position = new Vector3(Blocks[t].transform.position.x, BlockHeights[t] - fallAmount, Blocks[t].transform.position.z);
-            if (t < Blocks.Length - 1)
+            if (Blocks[t].gameObject.activeInHierarchy == false || Blocks[t].transform.position.y > Blocks[t].transform.position.y - fallAmount / 2)
             {
-                
-                //If block down then play random sound and set elapsed time back to 0
-                RandomSoundness();
-                t = t + 1;
-                elapsedTime = 0;
-
+                Debug.Log("added block");
+                BlockFall.Add(Blocks[t].gameObject);
+                BlockFall[t].gameObject.SetActive(true);
+                Blocks[t].gameObject.SetActive(true);
+                break;
             }
         }
+
+        for (int a = 0; a < BlockFall.Count; a++)
+        {
+            Debug.Log("moved block");
+            BlockFall[a].transform.Translate(Vector3.back * 2 * Time.deltaTime);
+        }
+
+        Debug.Log("broken");
+        
     }
 
     void RandomSoundness()
     {
         effectPlayer.clip = Clicks[Random.Range(0, Clicks.Length)];
         effectPlayer.Play();
+    }
+
+    void DropSingleBlock(GameObject blockGameObj)
+    {
+        for (float k = 0; k < 10; k += 1)
+        {
+            Blocks[t].Translate(Vector3.back * 2 * Time.deltaTime);
+        }
+    }
+
+    void moveBlocksBack()
+    {
+
     }
 }
