@@ -36,13 +36,17 @@ public class FallIntoPlace : MonoBehaviour
     void Start()
     {
         Blocks = GetComponentsInChildren<Transform>();
-
+        
         //iterate through every block and log starting Y position to the BlockHeights array
         for (int i = 1; i < Blocks.Length; i++)
         {
             Blocks[i].gameObject.SetActive(false);
         }
-        
+
+        //Setup first cube for falling
+
+        BlockFall.Add(Blocks[1].gameObject);
+        BlockFall[0].SetActive(true);     
     }
 
     // Update is called once per frame
@@ -52,55 +56,50 @@ public class FallIntoPlace : MonoBehaviour
 
         if (Input.GetMouseButton(0) && Input.mousePosition.y > 400)
         {
-            MoveBlock(Blocks);
+            GetBlockList();
+            MoveBlock();
         }
         else
         {
-            moveBlocksBack();
+            MoveBlocksBack();
         }
 
     }
 
-
-    void MoveBlock(Transform[] Blocks)
+    private void GetBlockList()
     {
-        for (int t = 0; t < Blocks.Length; t++)
+        if (Blocks[t].transform.position.y <= 10)
         {
-            if (Blocks[t].gameObject.activeInHierarchy == false || Blocks[t].transform.position.y > Blocks[t].transform.position.y - fallAmount / 2)
-            {
-                Debug.Log("added block");
-                BlockFall.Add(Blocks[t].gameObject);
-                BlockFall[t].gameObject.SetActive(true);
-                Blocks[t].gameObject.SetActive(true);
-                break;
+            BlockFall.Remove(BlockFall[t]);
+            t += 1;
+            BlockFall.Add(Blocks[t].gameObject);
+            BlockFall[t-1].SetActive(true);
+        }
+    }
+
+    private void MoveBlock()
+    {
+        for (int i = 0; i < BlockFall.Count; i++)
+        {
+            /*
+             idk figure this out basically add like options for 
+             
+             if(BlockFall[i].transform.position.y <= fallAmount) {
+                BlockFall[i].transform.position
             }
+             */
+            BlockFall[i].transform.Translate(30 * Time.deltaTime * Vector3.back);
         }
-
-        for (int a = 0; a < BlockFall.Count; a++)
-        {
-            Debug.Log("moved block");
-            BlockFall[a].transform.Translate(Vector3.back * 2 * Time.deltaTime);
-        }
-
-        Debug.Log("broken");
         
     }
 
-    void RandomSoundness()
+    private void RandomSoundness()
     {
         effectPlayer.clip = Clicks[Random.Range(0, Clicks.Length)];
         effectPlayer.Play();
     }
 
-    void DropSingleBlock(GameObject blockGameObj)
-    {
-        for (float k = 0; k < 10; k += 1)
-        {
-            Blocks[t].Translate(Vector3.back * 2 * Time.deltaTime);
-        }
-    }
-
-    void moveBlocksBack()
+    private void MoveBlocksBack()
     {
 
     }
