@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class FallIntoPlace : MonoBehaviour
 {
@@ -9,14 +10,13 @@ public class FallIntoPlace : MonoBehaviour
 
     public AudioSource effectPlayer;
 
-    public Transform[] Blocks;
-
     public float[] BlockHeights;
 
     List<GameObject> BlockFall = new List<GameObject>();
 
+    public List<Transform> Blocks;
+    
     public float BlockFallLength;
-
 
     private Vector3 velocity = Vector3.zero;
 
@@ -36,12 +36,14 @@ public class FallIntoPlace : MonoBehaviour
 
     void Start()
     {
-        Blocks = GetComponentsInChildren<Transform>();
-        BlockHeights = new float[Blocks.Length];
 
+        //Linq Method to remove Parent from the List
+
+        Blocks.AddRange(GetComponentsInChildren<Transform>().Where(x => x != this.transform));
+        BlockHeights = new float[Blocks.Count];
 
         //iterate through every block and log starting Y position to the BlockHeights array
-        for (int i = 1; i < Blocks.Length; i++)
+        for (int i = 0; i < Blocks.Count; i++)
         {
             BlockHeights[i] = Blocks[i].transform.localPosition.y;
             Blocks[i].gameObject.SetActive(false);
@@ -49,10 +51,12 @@ public class FallIntoPlace : MonoBehaviour
 
         //Setup first cube for falling
 
-        BlockFall.Add(Blocks[1].gameObject);
+        BlockFall.Add(Blocks[0].gameObject);
         BlockFall[0].SetActive(true);
+
+        Debug.Log(BlockHeights[2]);
     }
-    
+
     // Update is called once per frame
     void Update()
     {
@@ -70,17 +74,6 @@ public class FallIntoPlace : MonoBehaviour
 
     }
 
-    private void GetBlockList()
-    {
-        if (BlockFall[t-1].transform.position.y <= BlockHeights[t]-(fallAmount/2))
-        {       
-            t += 1;
-            BlockFall.Add(Blocks[t].gameObject);
-            BlockFall[t-1].SetActive(true);
-            Debug.Log("Below");
-        }
-    }
-
     private void MoveBlock()
     {
         for (int i = 0; i < BlockFall.Count; i++)
@@ -96,10 +89,15 @@ public class FallIntoPlace : MonoBehaviour
         }
 
         
-        if(BlockFall[BlockFall.Count-1].transform.localPosition.y <= BlockHeights[BlockFall.Count-1]-(fallAmount/2))
+        if(BlockFall[BlockFall.Count-1].transform.localPosition.y <= BlockHeights[BlockFall.Count]-(fallAmount/2))
         {
-            BlockFall.Add(Blocks[BlockFall.Count].gameObject);
+            //issue somewhere here idk where b/c it probably just keeps adding Blocks[2] instead of the next one
+            BlockFall.Add(Blocks[BlockFall.Count-1].gameObject);
             BlockFall[BlockFall.Count-1].SetActive(true);
+            for(int i = 0; i < BlockFall.Count; i++)
+            {
+                Debug.Log(BlockFall[i]);
+            }
             //t += 1;
             Debug.Log("troll");
         }
