@@ -51,10 +51,12 @@ public class FallIntoPlace : MonoBehaviour
     void Update()
     {
         objectSpeed = speedSlider.value;
-        
-        MoveBlockDown();
-        CheckBlocks();
 
+        if (Input.GetMouseButton(0) && Input.mousePosition.y > 400)
+        {
+            MoveBlockDown();
+            CheckBlocks();
+        }
     }
 
     private void MoveBlockDown()
@@ -70,8 +72,9 @@ public class FallIntoPlace : MonoBehaviour
         //check if Last block (actually [0]) is at or below its desired point, then remove it and use new block
         if(Blocks[0].transform.localPosition.y <= initialHeight - fallAmount)
         {
-            Blocks[0].transform.position = new Vector3(Blocks[0].transform.localPosition.x, initialHeight - fallAmount, Blocks[0].transform.localPosition.z);
+            Blocks[0].transform.localPosition = new Vector3(Blocks[0].transform.localPosition.x, initialHeight - fallAmount, Blocks[0].transform.localPosition.z);
             Blocks.RemoveAt(0);
+            BlocksActivated -= 1;
             initialHeight = Blocks[0].transform.localPosition.y + (fallAmount/2);
             
         }
@@ -79,6 +82,7 @@ public class FallIntoPlace : MonoBehaviour
         //Check if first block is below halfway point of fallAmount
         if(Blocks[BlocksActivated-1].transform.localPosition.y <= initialHeightFirst - fallAmount / 2)
         {
+            Debug.Log(Blocks[BlocksActivated-1].transform.localPosition.y);
             BlocksActivated += 1;
             Blocks[BlocksActivated - 1].gameObject.SetActive(true);
             initialHeightFirst = Blocks[BlocksActivated - 1].transform.localPosition.y;
