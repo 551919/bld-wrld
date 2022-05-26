@@ -12,8 +12,6 @@ public class FallIntoPlace : MonoBehaviour
 
     public float[] BlockHeights;
 
-    List<GameObject> BlockFall = new List<GameObject>();
-
     public List<Transform> Blocks;
     
     public float BlockFallLength;
@@ -22,7 +20,7 @@ public class FallIntoPlace : MonoBehaviour
 
     private float elapsedTime = 0;
 
-    public int fallAmount = 6;
+    private int fallAmount = 6;
 
     private int t = 1;
 
@@ -33,6 +31,8 @@ public class FallIntoPlace : MonoBehaviour
     public AnimationCurve animCurve;
 
     private int blockDif = 0;
+
+    private int BlocksActivated = 0;
 
     void Start()
     {
@@ -51,10 +51,11 @@ public class FallIntoPlace : MonoBehaviour
 
         //Setup first cube for falling
 
-        BlockFall.Add(Blocks[0].gameObject);
-        BlockFall[0].SetActive(true);
+        Blocks[0].gameObject.SetActive(true);
 
-        Debug.Log(BlockHeights[2]);
+        BlocksActivated += 1;
+
+
     }
 
     // Update is called once per frame
@@ -62,42 +63,40 @@ public class FallIntoPlace : MonoBehaviour
     {
         objectSpeed = speedSlider.value;
 
-        if (Input.GetMouseButton(0) && Input.mousePosition.y > 400)
-        {
-            //GetBlockList();
-            MoveBlock();
-        }
-        else
-        {
-            MoveBlocksBack();
-        }
+        MoveBlock();
 
     }
 
     private void MoveBlock()
     {
-        for (int i = 0; i < BlockFall.Count; i++)
+        /* IMPORTANT IMPORTANT
+         * 
+         * 
+         * YOU ONLY NEED TO CHECK IF BLOCK 0 IS AT THE NEEDED Y VALUE AND YOU CAN REMOVE IT FROM THE LIST
+         */
+
+        if (Input.GetMouseButton(0) && Input.mousePosition.y > 400)
         {
-            BlockFall[i].transform.Translate(5 * Time.deltaTime * Vector3.back);
-            if (BlockFall[i].transform.localPosition.y <= BlockHeights[i + 1]-fallAmount)
+            for (int i = 0; i < BlocksActivated; i++)
             {
-                BlockFall[i].transform.localPosition = new Vector3(BlockFall[i].transform.localPosition.x,BlockHeights[i+1]-fallAmount, BlockFall[i].transform.localPosition.z);
-                BlockFall.RemoveAt(i);
+                Blocks[i].transform.Translate(5 * Time.deltaTime * Vector3.back);
+                if (Blocks[i].transform.localPosition.y <= BlockHeights[i] - fallAmount /*should be 14*/)
+                {
+                    Blocks[i].transform.localPosition = new Vector3(Blocks[i].transform.localPosition.x, BlockHeights[i] - fallAmount, Blocks[i].transform.localPosition.z);
+                    Blocks.RemoveAt(0);
+
+                }
 
             }
-            
         }
 
         
-        if(BlockFall[BlockFall.Count-1].transform.localPosition.y <= BlockHeights[BlockFall.Count]-(fallAmount/2))
+        if(Blocks[BlocksActivated-1].transform.localPosition.y <= BlockHeights[BlocksActivated-1]-(fallAmount/2))
         {
             //issue somewhere here idk where b/c it probably just keeps adding Blocks[2] instead of the next one
-            BlockFall.Add(Blocks[BlockFall.Count-1].gameObject);
-            BlockFall[BlockFall.Count-1].SetActive(true);
-            for(int i = 0; i < BlockFall.Count; i++)
-            {
-                Debug.Log(BlockFall[i]);
-            }
+            BlocksActivated += 1;
+            Debug.Log(BlocksActivated);
+            Blocks[BlocksActivated-1].gameObject.SetActive(true);
             //t += 1;
             Debug.Log("troll");
         }
