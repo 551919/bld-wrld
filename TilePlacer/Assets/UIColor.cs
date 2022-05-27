@@ -122,6 +122,7 @@ public class UIColor : MonoBehaviour
                 }
                 colorsSelected = false;
                 colorsChanged += 1;
+
             }
 
         }

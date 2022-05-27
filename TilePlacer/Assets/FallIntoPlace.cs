@@ -25,8 +25,14 @@ public class FallIntoPlace : MonoBehaviour
     //Most important part of script probably, the list of Blocks taken from the parent object
     public List<Transform> Blocks;
 
+    //Block Heights List
+
+    public List<float> BlockHeights;
+
     //Height that the Blocks should fall
     public int fallAmount = 6;
+
+    public int fallSameTime = 3;
 
     //(DEBUG ONLY) Slider that controls object fall speed, obsolete now as the falling has been reworked
     public float objectSpeed;
@@ -35,8 +41,6 @@ public class FallIntoPlace : MonoBehaviour
 
     //Variables For Iterating
     private int BlocksActivated = 0;
-
-    private float initialHeight = 0;
 
     private float initialHeightFirst = 0;
 
@@ -47,10 +51,14 @@ public class FallIntoPlace : MonoBehaviour
 
         Blocks.AddRange(GetComponentsInChildren<Transform>().Where(x => x != this.transform));
 
+        //Set BlockHeights to length of Blocks
+
         //Iterate through every Block and remove from List
         for (int i = 0; i < Blocks.Count; i++)
         {
+            BlockHeights.Add(Blocks[i].transform.localPosition.y);
             Blocks[i].gameObject.SetActive(false);
+
         }
 
         //Setup First Cube
@@ -59,7 +67,6 @@ public class FallIntoPlace : MonoBehaviour
         BlocksActivated += 1;
         
         //Setup Initial Heights for first and last Block (should be same var for the first block)
-        initialHeight = Blocks[0].transform.localPosition.y;
         initialHeightFirst = Blocks[BlocksActivated - 1].transform.localPosition.y;
 
     }
@@ -92,24 +99,23 @@ public class FallIntoPlace : MonoBehaviour
     private void CheckBlocks()
     {
         //check if Last block (actually [0]) has fallen the fallAmount amount
-        if(Blocks[0].transform.localPosition.y <= initialHeight - fallAmount)
+        if(Blocks[0].transform.localPosition.y <= BlockHeights[0] - fallAmount)
         {
             //Fix position of the block to the desired final position
-            Blocks[0].transform.localPosition = new Vector3(Blocks[0].transform.localPosition.x, initialHeight - fallAmount, Blocks[0].transform.localPosition.z);
-            //Remove the Block from the List
+            Blocks[0].transform.localPosition = new Vector3(Blocks[0].transform.localPosition.x, BlockHeights[0] - fallAmount, Blocks[0].transform.localPosition.z);
+            //Remove the Block from the List and the BlockHeights
             Blocks.RemoveAt(0);
+            BlockHeights.RemoveAt(0);
             //THIS IS IMPORTANT!!! The line above removes the first block from the list which messes up BlocksActivated so we remove 1 to compensate
             BlocksActivated -= 1;
-            //Set the inital height of the lowest block (should be fallamount/2 already down), so add fallamount/2 to compensate and find starting y position
-            initialHeight = Blocks[0].transform.localPosition.y + (fallAmount/2);
-            
         }
 
         //Check if first block is below halfway point of fallAmount
-        if(Blocks[BlocksActivated-1].transform.localPosition.y <= initialHeightFirst - fallAmount / 2)
+        if(Blocks[BlocksActivated-1].transform.localPosition.y <= initialHeightFirst - fallAmount / fallSameTime && Blocks.Count > fallSameTime-1)
         {
             //Change BlockVar to next Block and then activate that block
             BlocksActivated += 1;
+
             Blocks[BlocksActivated - 1].gameObject.SetActive(true);
             //Set the initialHeightFirst variable (height of highest/first block in the list) to the initial height of the first block
             initialHeightFirst = Blocks[BlocksActivated - 1].transform.localPosition.y;
