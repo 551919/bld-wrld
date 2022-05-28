@@ -34,15 +34,14 @@ public class FallIntoPlace : MonoBehaviour
 
     public int fallSameTime = 3;
 
-    //(DEBUG ONLY) Slider that controls object fall speed, obsolete now as the falling has been reworked
-    public float objectSpeed;
-
-    public Slider speedSlider;
-
     //Variables For Iterating
     private int BlocksActivated = 0;
 
     private float initialHeightFirst = 0;
+
+    //Object Speed Var
+
+    public int objectSpeed;
 
     void Start()
     {
@@ -74,8 +73,6 @@ public class FallIntoPlace : MonoBehaviour
     // Update Loop, pretty self-explanatory
     void Update()
     {
-        //Set objectSpeed (speed at which blocks fall) from the slider in level
-        objectSpeed = speedSlider.value;
 
         //If mouse is down and above cetain y value so it doesn't interfere with the "Colors" button in GUI
         if (Input.GetMouseButton(0) && Input.mousePosition.y > 400)

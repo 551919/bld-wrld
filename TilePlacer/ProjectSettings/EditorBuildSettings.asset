@@ -6,12 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Unicorn.unity
+    path: Assets/Scenes/MythicCreatures/Unicorn.unity
     guid: f1657bb76735e68479feea3237c83964
   - enabled: 1
-    path: Assets/Scenes/Fairy.unity
+    path: Assets/Scenes/MythicCreatures/Fairy.unity
     guid: e2c571cc204d9c34591b06ee092cc526
   - enabled: 1
-    path: Assets/Scenes/Phoenix.unity
+    path: Assets/Scenes/MythicCreatures/Phoenix.unity
     guid: 7c62cdf79a7d48045b5a71f6239cc268
+  - enabled: 1
+    path: Assets/Scenes/MythicCreatures/Gnome.unity
+    guid: 49345a3f05ea40a4cb5188bdcee14f19
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 4be10df24c25dad4895c2d8a341efa71
   m_configObjects: {}
